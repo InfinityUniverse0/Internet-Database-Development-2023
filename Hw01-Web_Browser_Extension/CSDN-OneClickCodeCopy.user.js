@@ -26,10 +26,13 @@
         try {
             // 尝试执行复制命令
             var successful = document.execCommand("copy");
-            /*
+
             var message = successful ? "复制成功" : "复制失败";
-            alert(message);
-            */
+            event.target.setAttribute("data-title", message);
+            setTimeout(function () {
+                event.target.setAttribute("data-title", "一键复制"); // 三秒后子线程执行，将其还原
+            }, 3000);
+            // alert(message);
         } catch (err) {
             console.error("复制失败:", err);
         }
