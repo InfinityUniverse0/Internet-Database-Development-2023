@@ -14,6 +14,7 @@
 
     function copyCode(event) {
         var code = event.target.parentNode.querySelector("code");
+        if (!code) code = event.target.parentNode;
 
         // 创建一个临时的 textarea 元素
         var textarea = document.createElement("textarea");
@@ -41,16 +42,22 @@
         document.body.removeChild(textarea);
     }
 
-    var codeBlockList = document.getElementsByName("code");
+    var codeBlockList = document.getElementsByTagName("code");
 
     for (var i = 0; i < codeBlockList.length; i++) {
-        var codeBlock = codeBlockList[i];
+        var codeBlock = codeBlockList[i].parentNode;
 
         // 获取第一个匹配的子元素
-        // var code = codeBlock.querySelector("code"); // 标签名匹配
+        var code = codeBlock.querySelector("code"); // 标签名匹配
         var btn = codeBlock.querySelector(".hljs-button"); // 类名匹配
 
-        if (btn) {
+        if (code && code.hasAttribute("onclick")) {
+            code.removeAttribute("onclick"); // 清除原事件绑定
+            code.addEventListener("click", copyCode);
+
+            if (btn) {btn.setAttribute("data-title", "一键复制");}
+        }
+        else if (btn) {
             btn.setAttribute("data-title", "一键复制");
 
             // 设置 onclick 属性以调用 copyCode 函数
